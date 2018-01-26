@@ -11,14 +11,12 @@ import sys
 
 def _parse_makefile(lines):
     lines = [line for line in lines if line != '']
-    helps = []
     pattern = re.compile('(?<=^## ).+')
-    for idx, line in enumerate(lines):
-        if line.startswith('##'):
-            detail = pattern.search(line.strip()).group().strip()
-            target = lines[idx + 1].strip()[:-1]
-            helps.append((target, detail))
-    return helps
+    for first, second in zip(lines, lines[1:]):
+        if first.startswith('##'):
+            detail = pattern.search(first.strip()).group().strip()
+            target = second.strip()[:-1]
+            yield target, detail
 
 
 def _prepare_makefile_lines(makefile_path):
@@ -28,12 +26,16 @@ def _prepare_makefile_lines(makefile_path):
 
 
 def format_makehelp(makefile_path):
+    """
+    return Makefile help.
+    """
     lines = _prepare_makefile_lines(makefile_path)
     helps = _parse_makefile(lines)
-    return ['{}:\t{}'.format(target, detail) for target, detail in helps]
+    return ('{}:\t{}'.format(target, detail) for target, detail in helps)
 
 
 def main():
+    """Search Makefile at current directory and show help."""
     makefile = pathlib.Path('./Makefile')
     if not makefile.is_file():
         print(
