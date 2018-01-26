@@ -12,10 +12,11 @@ import sys
 def _parse_makefile(lines):
     lines = [line for line in lines if line != '']
     pattern = re.compile('(?<=^## ).+')
+    head_pattern = re.compile('.+(?=:)')
     for first, second in zip(lines, lines[1:]):
         if first.startswith('##'):
             detail = pattern.search(first.strip()).group().strip()
-            target = second.strip()[:-1]
+            target = head_pattern.search(second.strip()).group()
             yield target, detail
 
 
