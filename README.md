@@ -2,3 +2,19 @@
 
 # make2help
 This is inspired by https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+
+# Install
+
+Run following command to install:
+
+```
+ $ pip install git+https://github.com/515hikaru/make2help
+```
+
+# License
+
+MIT License
+
+# Author
+
+Takahiro Kojima (@515hikaru)
