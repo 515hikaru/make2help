@@ -44,7 +44,7 @@ class TestParseMakefile(unittest.TestCase):
         expected return value is ('target', '')
         """
         result = make2help.parse_makefile(['target: foo', '\t@echo "foo"'])
-        self.assertEqual(next(result), ('target', 'help'))
+        self.assertEqual(next(result), ('target', ''))
 
 
 if __name__ == '__main__':

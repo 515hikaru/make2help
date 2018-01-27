@@ -12,12 +12,17 @@ def parse_makefile(lines):
     parse makefine lines.
     """
     lines = [line for line in lines if line != '']
-    pattern = re.compile('(?<=^## ).+')
-    head_pattern = re.compile('.+(?=:)')
-    for first, second in zip(lines, lines[1:]):
-        if first.startswith('##'):
-            detail = pattern.search(first.strip()).group().strip()
-            target = head_pattern.search(second.strip()).group()
+    help_pattern = re.compile('(?<=^## ).+')
+    target_pattern = re.compile('.+(?=:)')
+    for num, line in enumerate(lines):
+        find_target = target_pattern.search(line)
+        if find_target:
+            target = find_target.group()
+            help_ = help_pattern.search(lines[num - 1])
+            if num != 0 and help_:
+                detail = help_.group()
+            else:
+                detail = ''
             yield target, detail
 
 
