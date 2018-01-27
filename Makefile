@@ -1,12 +1,12 @@
 ## install this command
 install:
-	python setup.py install
+	python3 setup.py install
 ## install for development
 develop:
-	python setup.py develop
+	python3 setup.py develop
 ## exec unit test
 test: tests/test_make2help.py
-	python -m unittest tests/test_make2help.py
+	python3 -m unittest tests/test_make2help.py
 ## Show target list
 help:
 	@make2help 

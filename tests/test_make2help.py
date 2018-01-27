@@ -1,30 +1,63 @@
 """
 Unit Test for make2help.py
 """
-import os
 import unittest
 
 import make2help
 
-BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 
 class TestPrintString(unittest.TestCase):
-    """出力文字列が想定通りかをテスト"""
+    """Testing for expected format string"""
 
-    def test_example_makefile(self):
+    def test_makefile_format(self):
+        """
+        target = 'foo'
+        detail = 'help'
+        => return 'foo:\thelp'
+        """
+        result = make2help.format_makehelp('foo', 'help')
+        self.assertEqual(result, 'foo:\thelp')
+
+
+class TestParseMakefile(unittest.TestCase):
+    """Testing for Makefile parser"""
+
+    def test_makefile_parse_normal_target(self):
         """
         ```
-        ## foo
-        bar:
+        ## help
+        target: foo
         	@echo "foo"
         ```
-        という形式のMakefileのテスト
-        出力されるヘルプは 'bar:\tfoo' となる
+        expected return value is ('target', 'help')
         """
-        makefile_path = os.path.join(BASE_DIR, 'sample/Makefile1')
-        result = make2help.format_makehelp(makefile_path)
-        expected = ('bar:\tfoo')
-        self.assertEqual(next(result), expected)
+        result = make2help.parse_makefile(
+            ['## help', 'target: foo', '\t@echo "foo"'])
+        self.assertEqual(next(result), ('target', 'help'))
+
+    def test_makefile_none_help(self):
+        """
+        ```
+        target: foo
+        	@echo "foo"
+        ```
+        expected return value is ('target', '')
+        """
+        result = make2help.parse_makefile(['target: foo', '\t@echo "foo"'])
+        self.assertEqual(next(result), ('target', ''))
+
+    def test_makefile_doublesharp_exist(self):
+        """
+        ```
+        ## 
+        target: foo
+        	@echo "foo"
+        expected return value is ('target', '')
+        ```
+        """
+        result = make2help.parse_makefile(
+            ['## ', 'target: foo', '\t@echo "foo"'])
+        self.assertEqual(next(result), ('target', ''))
 
 
 if __name__ == '__main__':
