@@ -46,6 +46,19 @@ class TestParseMakefile(unittest.TestCase):
         result = make2help.parse_makefile(['target: foo', '\t@echo "foo"'])
         self.assertEqual(next(result), ('target', ''))
 
+    def test_makefile_doublesharp_exist(self):
+        """
+        ```
+        ## 
+        target: foo
+        	@echo "foo"
+        expected return value is ('target', '')
+        ```
+        """
+        result = make2help.parse_makefile(
+            ['## ', 'target: foo', '\t@echo "foo"'])
+        self.assertEqual(next(result), ('target', ''))
+
 
 if __name__ == '__main__':
     unittest.main()
