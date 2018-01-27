@@ -1,45 +1,50 @@
 """
 Unit Test for make2help.py
 """
-import pathlib
 import unittest
 
 import make2help
 
-BASE_DIR = pathlib.Path(__file__).absolute().parent.parent / pathlib.Path(
-    'sample')
-
 
 class TestPrintString(unittest.TestCase):
-    """出力文字列が想定通りかをテスト"""
+    """Testing for expected format string"""
 
-    def test_example_makefile(self):
+    def test_makefile_format(self):
+        """
+        target = 'foo'
+        detail = 'help'
+        => return 'foo:\thelp'
+        """
+        result = make2help.format_makehelp('foo', 'help')
+        self.assertEqual(result, 'foo:\thelp')
+
+
+class TestParseMakefile(unittest.TestCase):
+    """Testing for Makefile parser"""
+
+    def test_makefile_parse_normal_target(self):
         """
         ```
-        ## foo
-        bar:
+        ## help
+        target: foo
         	@echo "foo"
         ```
-        という形式のMakefileのテスト
-        出力されるヘルプは 'bar:\tfoo' となる
+        expected return value is ('target', 'help')
         """
-        makefile_path = BASE_DIR / pathlib.Path('Makefile1')
-        result = make2help.format_makehelp(makefile_path)
-        expected = 'bar:\tfoo'
-        self.assertEqual(next(result), expected)
+        result = make2help.parse_makefile(
+            ['## help', 'target: foo', '\t@echo "foo"'])
+        self.assertEqual(next(result), ('target', 'help'))
 
-    def test_comment_empty_target(self):
+    def test_makefile_none_help(self):
         """
         ```
-        bar:
+        target: foo
         	@echo "foo"
         ```
-        のように `##` がなかった場合でも `bar` は出力をする
+        expected return value is ('target', '')
         """
-        makefile_path = BASE_DIR / pathlib.Path('Makefile2')
-        result = make2help.format_makehelp(makefile_path)
-        expected = 'bar'
-        self.assertEqual(next(result), expected)
+        result = make2help.parse_makefile(['target: foo', '\t@echo "foo"'])
+        self.assertEqual(next(result), ('target', 'help'))
 
 
 if __name__ == '__main__':

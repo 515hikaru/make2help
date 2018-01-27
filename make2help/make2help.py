@@ -7,7 +7,10 @@ See: https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 import re
 
 
-def _parse_makefile(lines):
+def parse_makefile(lines):
+    """
+    parse makefine lines.
+    """
     lines = [line for line in lines if line != '']
     pattern = re.compile('(?<=^## ).+')
     head_pattern = re.compile('.+(?=:)')
@@ -18,16 +21,15 @@ def _parse_makefile(lines):
             yield target, detail
 
 
-def _prepare_makefile_lines(makefile_path):
+def prepare_makefile_lines(makefile_path):
+    """return makefile content"""
     with open(makefile_path, 'r') as makefile:
         lines = makefile.readlines()
     return lines
 
 
-def format_makehelp(makefile_path):
+def format_makehelp(target, detail):
     """
-    return Makefile help.
+    return "{target}:\t{detail}"
     """
-    lines = _prepare_makefile_lines(makefile_path)
-    helps = _parse_makefile(lines)
-    return ('{}:\t{}'.format(target, detail) for target, detail in helps)
+    return '{}:\t{}'.format(target, detail)
