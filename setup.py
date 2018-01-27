@@ -10,7 +10,7 @@ classifiers = [
 ]
 setup(
     name='make2help',
-    version=0.1,
+    version='0.0.1',
     description='Show all target in Makefile',
     url='https://github.com/515hikaru/make2help',
     author='515hikaru',
@@ -21,4 +21,5 @@ setup(
         'console_scripts': [
             'make2help=make2help:main',
         ],
-    }, )
+    },
+)
