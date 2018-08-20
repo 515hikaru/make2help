@@ -53,11 +53,20 @@ class TestParseMakefile(unittest.TestCase):
         target: foo
         	@echo "foo"
         expected return value is ('target', '')
-        ```
         """
         result = make2help.parse_makefile(
             ['## ', 'target: foo', '\t@echo "foo"'])
         self.assertEqual(next(result), ('target', ''))
+
+    def test_makefile_keyword_ignore(self):
+        """
+        ```
+        .PHONY : foo
+        ```
+        expected return value is None
+        """
+        result = make2help.parse_makefile(['.PHONY: foo'])
+        self.assertRaises(StopIteration)
 
 
 if __name__ == '__main__':
