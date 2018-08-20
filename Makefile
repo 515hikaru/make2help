@@ -1,3 +1,4 @@
+.DEFAULT_GOAL := help
 ## install this command
 install:
 	python3 setup.py install
@@ -10,3 +11,5 @@ test: tests/test_make2help.py
 ## Show target list
 help:
 	@make2help 
+
+.PHONY: install develop test help
