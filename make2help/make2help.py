@@ -18,6 +18,9 @@ def parse_makefile(lines):
         find_target = target_pattern.search(line)
         if find_target:
             target = find_target.group()
+            # except startswith '.', like .PHONY
+            if target.strip().startswith('.'):
+                continue
             help_ = help_pattern.search(lines[num - 1])
             if num != 0 and help_:
                 detail = help_.group()
